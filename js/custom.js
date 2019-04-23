@@ -25,7 +25,7 @@ $(document).ready(function () {
     $('#insert').on('click', function(){
         var title = $('#title').val();
         var image = $("#preview").attr('src');
-        var body = quill.root.innerHTML;
+        var body = CKEDITOR.instances.content.getData();
         var errors = [];
         if(title == '')
         {
@@ -35,7 +35,7 @@ $(document).ready(function () {
         {
             errors.push("<div class='alert alert-danger'>Image field is required</div>");
         }
-        if(body == '<p><br></p>')
+        if(body == '')
         {
             errors.push("<div class='alert alert-danger'>Body field is required</div>");
         }
@@ -48,16 +48,16 @@ $(document).ready(function () {
             }
             $.ajax({
                 type: "POST",
-                url: "url",
+                url: URL + 'article/create',
                 data: article,
                 dataType: "application/json",
                 success: function (response)
                 {
-                    
+                    console.log(response);
                 },
                 error: function(response)
                 {
-
+                   alert(response);
                 }
             });
         }
