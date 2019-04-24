@@ -32,15 +32,18 @@
         </div>
     </nav>
 
-    <section class="container-fluid min-height mt-5">
-        <div class="row" id="index">
-           
-        </div>
-
-        <div class="row justify-content-center" id="pagination_all">
+    <section class="container-fluid mt-5">
+        <div class="row justify-content-center" id="heading">
            
         </div>
         
+    </section>
+
+    <section class="container-fluid min-height mt-5">
+            <div class="row justify-content-center" id="body">
+               
+            </div>
+            
     </section>
 
     <footer class="page-footer font-small stylish-color-dark pt-4 mt-4">
@@ -54,48 +57,41 @@
         <script src="js/custom.js"></script>
         <script>
             const URL = "http://localhost/rest-api/public/api/";
+            var full_url = window.location.href;
+            var proccessed = full_url.split("\?");
+            var array = proccessed[1].split("=");
+            var id = array[1];
             $(document).ready(function(){
-
+                const URL = "http://localhost/rest-api/public/api/";
                 $.ajax({
                     type: "GET",
-                    url: URL + "article/all",
+                    url: URL + "article/show",
+                    data: {
+                        "id": id
+                    },
+                    dataType: "application/json",
                     complete: function (response) {
-                        var articles = '';
-                        $.each(response.responseJSON.data, function(key, value){
-                            var date = new Date(value.created_at);
-                            var day = date.getDate();
-                            var month = date.getMonth();
-                            var year = date.getFullYear();
-                            articles += `<div class="col-lg-4 col-md-6 mb-4">
-                                        <div class="card h-100">
-                                        <a href="single_article.html?id=${value.id}"><img class="card-img-top" src="${value.main_image}" alt="${value.alt}"></a>
-                                        <div class="card-body">
-                                            <h4 class="card-title">
-                                            <a href="single_article.html?id=${value.id}">${value.title}</a>
-                                            </h4>
-                                            <h5>Posted by: ${value.user.name} on ${day + '/' + month + '/' + year}</h5>
-                                        </div>
-                                        </div>
-                                    </div>`;
-                        });
-                        $('#index').html(articles);
-                        if(response.responseJSON.last_page != 1)
-                        {
-                            var links = '<ul class="pagination">';
-                            for(var i = 1; i <= response.responseJSON.last_page; i++)
-                            {
-                                var url_link = `${URL}article/all?page=${i}`
-                                links += `<li class="page-item"><a class="page-link pagination-all" href="#" data-id="${url_link}">${i}</a></li>`;
-                            }
-                            links += "</ul>";
-                            $('#pagination_all').html(links);
-
-                        }
-                        
+                        var json = JSON.parse(response.responseText);
+                        var date = new Date(json.created_at);
+                        var day = date.getDate();
+                        var month = date.getMonth();
+                        var year = date.getFullYear();
+                        var header = `<div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100">
+                                <a href="#"><img class="card-img-top" src="${json.main_image}" alt="${json.alt}"></a>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                    </h4>
+                                    <h5>Posted by: ${json.user.name} on ${day + '/' + month + '/' + year}</h5>
+                                </div>
+                                </div>
+                            </div>`;
+                        $('#heading').html(header);
+                        $('#body').html(json.body);
                         
                     }
                 });
-
+                
             });
         </script>
     </footer>

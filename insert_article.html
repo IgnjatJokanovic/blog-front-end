@@ -77,9 +77,20 @@
         <!-- <script src="js/ckeditor/ckeditor.js"></script> -->
         <script src="js/ckeditor/ckeditor.js"></script>
         <script>
-            CKEDITOR.replace( 'content', {
-             height: 300,
-             filebrowserUploadUrl: "http://localhost/rest-api/public/api/image/upload"
+            $(document).ready(function(){
+                var user = localStorage.getItem('token');
+                if(user != null)
+                {
+                    CKEDITOR.replace( 'content', {
+                    height: 300,
+                    filebrowserUploadUrl: "http://localhost/rest-api/public/api/image/upload"
+                    });
+
+                }
+                else
+                {
+                    window.location.href = "index.html";
+                }
             });
             const URL = "http://localhost/rest-api/public/api/";
         </script>
